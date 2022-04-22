@@ -236,10 +236,10 @@
 
                     } else {
                         document.getElementById('foto').value = "";
-                        this.registers.nome = "";
+                        this.registers.name = "";
                         this.registers.email = "";
-                        this.registers.telefone = "";
-                        this.registers.senha = "";
+                        this.registers.phone = "";
+                        this.registers.password = "";
 
                         if (response.data.mensagem != undefined) {
 
@@ -250,13 +250,7 @@
                                 this.erro.mostrar = false;
                                 this.dialog = false;
                             }, 2000);
-
-
-
                         }
-
-
-
 
                         this.mostrar();
 
@@ -265,17 +259,12 @@
 
                 },
                 novoRegistro: function () {
-
                     this.registro.name = "";
                     this.registro.email = "";
                     this.registro.phone = "";
                     this.registro.password = "";
-
                     this.dialog = true;
-
                     this.tipoRegistro = " Novo"
-
-
 
                     if (document.getElementById('foto') != null) {
                         document.getElementById('foto').value = "";
@@ -305,16 +294,27 @@
                             'Content-Type': 'multipart/form-data'
                         }
                     }).then(response => {
-                        this.validacoeRespostaBackEnd(response);
+                        //this.validacoeRespostaBackEnd(response);
 
+                        document.getElementById('foto').value = "";
+                        this.registers.name = "";
+                        this.registers.email = "";
+                        this.registers.phone = "";
+                        this.registers.password = "";
+
+                        this.erro.mostrar = true;
+                        this.tipo.alerta = "success";
+                        this.erro.mensagem = 'Registro salvo com sucesso.';
+
+                        setTimeout(() => {
+                            this.erro.mostrar = false;
+                            this.dialog = false;
+                        }, 2000);
+                        
+                        this.mostrar();
                     })
-
-
-
-
-
-
                 },
+
                 editarRegistro: function (id, nome, email, telefone, senha, foto) {
 
                     this.dialog = true;
