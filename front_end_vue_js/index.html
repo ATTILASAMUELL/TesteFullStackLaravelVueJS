@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,430 +10,422 @@
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.0.2/dist/sweetalert2.min.css">  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.0.2/dist/sweetalert2.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <title>Teste Full Stack - LARAVEL & VUE JS</title>
 </head>
+
 <body>
     <div id="app">
         <v-app>
-
-            <v-main>      
+            <v-main>
                 <v-card class="mx-auto mt-5" max-width="1300">
                     <br>
-                <v-btn rounded color="green accent-2" @click="novoRegistro()">Novo Registro</v-btn> 
+                    <v-btn rounded color="green accent-2" @click="novoRegistro()">Novo Registro</v-btn>
 
-                   <!-- Tabla y formulario -->
-                        <v-simple-table class="mt-5">
-                            <template v-slot:default>
-                                <thead>
-                                    <tr class="light-blue darken-2">
-                                        <th class="white--text">ID</th>
-                                        <th class="white--text">NOME</th>
-                                        <th class="white--text">EMAIL</th>
-                                        <th class="white--text">SENHA</th>
-                                        <th class="white--text text-center">TELEFONE</th>
-                                        <th class="white--text text-center">FOTO</th>
-                                        <th class="white--text text-center"></th>
-                                        <th class="white--text text-center"></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="bodyTabela">
-                                    <tr v-for="registr in registros" :key="registr.id">
+                    <!-- Tabla y formulario -->
+                    <v-simple-table class="mt-5">
+                        <template v-slot:default>
+                            <thead>
+                                <tr class="light-blue darken-2">
+                                    <th class="white--text">ID</th>
+                                    <th class="white--text">NOME</th>
+                                    <th class="white--text">EMAIL</th>
+                                    <th class="white--text">SENHA</th>
+                                    <th class="white--text text-center">TELEFONE</th>
+                                    <th class="white--text text-center">FOTO</th>
+                                    <th class="white--text text-center"></th>
+                                    <th class="white--text text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyTabela">
+                                <tr v-for="registr in registros" :key="registr.id">
                                     <td>{{ registr.id }}</td>
-                                    <td>{{ registr.nome }}</td>
+                                    <td>{{ registr.name }}</td>
                                     <td>{{ registr.email }}</td>
                                     <td>******************</td>
-                                    <td>{{ registr.telefone }}</td>
-                                    <td><v-img :src="`${registr.foto}`" max-height="150" max-width="100"></v-img></td>
+                                    <td>{{ registr.phone }}</td>
+                                    <td>
+                                        <v-img :src="`http://localhost:8000/images/${registr.picture}`" max-height="150" max-width="100"></v-img>
+                                    </td>
                                     <td></td>
                                     <td>
-                                        <v-btn class="teal accent-4" dark @click="editarRegistro(registr.id,registr.nome,registr.email,registr.telefone,registr.senha,registr.foto)">Editar</v-btn>
+                                        <v-btn class="teal accent-4" dark
+                                            @click="editarRegistro(registr.id,registr.nome,registr.email,registr.telefone,registr.senha,registr.foto)">
+                                            Editar</v-btn>
                                         <v-btn class="error" dark @click="deletandoRegistro(registr.id)">Deletar</v-btn>
                                     </td>
-                                    </tr>
-                                </tbody>
-                            </template>
-                        </v-simple-table
+                                </tr>
+                            </tbody>
+                        </template>
+                    </v-simple-table </v-card>
+                    <!-- Componente de Diálogo para CRIAR E EDITAR -->
+                    <v-dialog v-model="dialog" max-width="500">
+                        <v-card>
+                            <v-card-title class="blue-grey darken-1 white--text">Registro {{tipoRegistro}}
+                            </v-card-title>
+                            <br>
+                            <v-card-text>
+                                <v-form>
+                                    <v-container>
+                                        <v-row>
+
+
+                                            <input v-model="registro.id" hidden></input>
+
+                                            <v-col cols="20" md="40">
+                                                <v-text-field v-model="registro.nome" label="Nome" solo required>
+                                                    {{registro.nome}}</v-text-field>
+                                            </v-col>
+                                            <v-col cols="20" md="40">
+                                                <v-text-field v-model="registro.email" label="Email" solo required>
+                                                </v-text-field>
+                                            </v-col>
+                                            <v-col cols="20" md="40">
+                                                <v-text-field v-model="registro.telefone" label="Telefone" solo
+                                                    required></v-text-field>
+                                            </v-col>
+                                            <v-col cols="20" md="40">
+                                                <v-text-field v-model="registro.senha" label="Senha" solo required>
+                                                </v-text-field>
+                                            </v-col>
+
+                                            <v-col cols="12">
+                                                <div v-if="condEdicao == true & tipoRegistro == ' Edição' ">
+                                                    <div id="divFtAtual">Foto Atual:</div>
+                                                    <img id="fotoEditar" height="50" width="50"
+                                                        :src="`${registro.foto}`">
+                                                    <br>
+                                                    <div id="divFtNova">Foto Nova:</div>
+
+                                                </div>
+
+                                                <input type="file" required id="foto" @change="fileEscolhido" />
+
+
+
+                                            </v-col>
+                                            <br>
+                                            <br>
+                                            <v-col cols="12">
+                                                <div v-if="erro.mostrar">
+                                                    <v-alert :type="`${tipo.alerta}`">{{erro.mensagem}}</v-alert>
+
+                                                </div>
+
+
+                                            </v-col>
+
+
+                                        </v-row>
+                                    </v-container>
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn @click="dialog=false">Cancelar</v-btn>
+                                <v-btn @click="salvarRegistro()" type="submit" color="indigo" dark>Salvar</v-btn>
+                            </v-card-actions>
+                            </v-form>
                         </v-card>
-                <!-- Componente de Diálogo para CRIAR E EDITAR -->
-     <v-dialog v-model="dialog" max-width="500">        
-        <v-card>
-          <v-card-title class="blue-grey darken-1 white--text">Registro {{tipoRegistro}}</v-card-title>   
-          <br> 
-          <v-card-text>            
-            <v-form>             
-              <v-container>
-                <v-row>
-                    
-                    
-                  <input v-model="registro.id" hidden></input>
-                  
-                   <v-col cols="20" md="40">
-                        <v-text-field v-model="registro.nome" label="Nome" solo required>{{registro.nome}}</v-text-field>
-                    </v-col>
-                  <v-col cols="20" md="40">
-                    <v-text-field v-model="registro.email"  label="Email"  solo required></v-text-field>
-                  </v-col>
-                  <v-col cols="20" md="40">
-                    <v-text-field v-model="registro.telefone"  label="Telefone"  solo required></v-text-field>
-                  </v-col>
-                  <v-col cols="20" md="40">  
-                    <v-text-field v-model="registro.senha" label="Senha"  solo required></v-text-field>
-                  </v-col>
-                  
-                  <v-col cols="12">
-                    <div v-if="condEdicao == true & tipoRegistro == ' Edição' ">
-                        <div id="divFtAtual">Foto Atual:</div>
-                        <img id="fotoEditar"    height="50" width="50" :src="`${registro.foto}`">
-                        <br>
-                        <div id="divFtNova">Foto Nova:</div>
-
-                    </div>
-                    
-                    <input type="file"  required id="foto"  @change="fileEscolhido"/> 
-
-
-
-                  </v-col>
-                  <br>
-                  <br>
-                  <v-col cols="12" >
-                    <div v-if="erro.mostrar">
-                        <v-alert :type="`${tipo.alerta}`">{{erro.mensagem}}</v-alert>
-
-                    </div>
-                    
-
-                  </v-col>
-                  
-                  
-                </v-row>
-              </v-container>            
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn @click="dialog=false">Cancelar</v-btn>
-            <v-btn @click="salvarRegistro()" type="submit" color="indigo" dark>Salvar</v-btn>
-          </v-card-actions>
-          </v-form>
-        </v-card>
-      </v-dialog>
+                    </v-dialog>
             </v-main>
         </v-app>
     </div>
 
 
-     
 
-      
+
+
 
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js" integrity="sha512-quHCp3WbBNkwLfYUMd+KwBAgpVukJu5MncuQaWXgCrfgcxCJAq/fo+oqrRKOj+UKEmyMCG3tb8RB63W+EmrOBg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js"
+        integrity="sha512-quHCp3WbBNkwLfYUMd+KwBAgpVukJu5MncuQaWXgCrfgcxCJAq/fo+oqrRKOj+UKEmyMCG3tb8RB63W+EmrOBg=="
+        crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.0.2/dist/sweetalert2.all.min.js"></script>
-    
+
     <script>
         let url = "http://127.0.0.1:8000/api/registers";
-       
+
         Vue.config.productionTip = false
-        
+
         let formData = new FormData();
         let aplication = new Vue({
             el: '#app',
             vuetify: new Vuetify(),
-            data(){
-                return{
-                    registros:[],
-                    dialog:false,
-                    opcao:'',
-                    condEdicao:false ,
+            data() {
+                return {
+                    registros: [],
+                    dialog: false,
+                    opcao: '',
+                    condEdicao: false,
                     controlador: false,
-                    erro:{
+                    erro: {
                         mostrar: false,
                         mensagem: ""
-                        
+
 
                     },
-                    tipo:{
-                        alerta:"error"
+                    tipo: {
+                        alerta: "error"
                     },
 
                     tipoRegistro: '',
-                    registro:{
-                        id:null,
-                        nome:"",
-                        email:"",
-                        senha:"",
-                        telefone:"",
-                        foto:""
+                    registro: {
+                        id: null,
+                        nome: "",
+                        email: "",
+                        senha: "",
+                        telefone: "",
+                        foto: ""
 
                     }
                 }
             },
-            created(){
-                
+            created() {
+
                 this.mostrar();
 
             },
-          
 
-            methods:{
-                mostrar:function(){
-                    
+
+            methods: {
+                mostrar: function () {
+
                     let urlGet = "http://127.0.0.1:8000/api/registers";
-                    axios.get(urlGet).then(response =>{
-                        
-                        
+                    axios.get(urlGet).then(response => {
+
+
                         this.registros = response.data;
-                        
-                        
-                        
-                        
+
+
+
+
                     })
                 },
-                validacoeRespostaBackEnd: function(response){
-                    
-                    if(response.data.errorBoolean)
-                            {
-                                if(response.data.error.nome != undefined)
-                                {
-                                    this.erro.mostrar = true;
-                                    this.tipo.alerta = "warning";
-                                    this.erro.mensagem = response.data.error.nome[0]
-                                    setTimeout(() => {
-                                        
-                                        this.erro.mostrar = false;}, 2000);
+                validacoeRespostaBackEnd: function (response) {
 
-                                }else if(response.data.error.email != undefined)
-                                {
-                                    this.erro.mostrar = true;
-                                    this.tipo.alerta = "warning";
-                                    this.erro.mensagem = response.data.error.email[0]
-                                    setTimeout(() => {this.erro.mostrar = false;}, 2000);
+                    if (response.data.errorBoolean) {
+                        if (response.data.error.nome != undefined) {
+                            this.erro.mostrar = true;
+                            this.tipo.alerta = "warning";
+                            this.erro.mensagem = response.data.error.nome[0]
+                            setTimeout(() => {
+
+                                this.erro.mostrar = false;
+                            }, 2000);
+
+                        } else if (response.data.error.email != undefined) {
+                            this.erro.mostrar = true;
+                            this.tipo.alerta = "warning";
+                            this.erro.mensagem = response.data.error.email[0]
+                            setTimeout(() => { this.erro.mostrar = false; }, 2000);
 
 
-                                }else if(response.data.error.senha != undefined)
-                                {
-                                    this.erro.mostrar = true;
-                                    this.tipo.alerta = "warning";
-                                    this.erro.mensagem = response.data.error.senha[0]
-                                    setTimeout(() => {this.erro.mostrar = false;}, 2000);
+                        } else if (response.data.error.senha != undefined) {
+                            this.erro.mostrar = true;
+                            this.tipo.alerta = "warning";
+                            this.erro.mensagem = response.data.error.senha[0]
+                            setTimeout(() => { this.erro.mostrar = false; }, 2000);
 
 
-                                }else if(response.data.error.telefone != undefined)
-                                {
-                                    this.erro.mostrar = true;
-                                    this.tipo.alerta = "warning";
-                                    this.erro.mensagem = response.data.error.telefone[0]
-                                    setTimeout(() => {this.erro.mostrar = false;}, 2000);
+                        } else if (response.data.error.telefone != undefined) {
+                            this.erro.mostrar = true;
+                            this.tipo.alerta = "warning";
+                            this.erro.mensagem = response.data.error.telefone[0]
+                            setTimeout(() => { this.erro.mostrar = false; }, 2000);
 
 
-                                }else if(response.data.error.foto != undefined)
-                                {
-                                    this.erro.mostrar = true;
-                                    this.tipo.alerta = "warning";
-                        
-                                    this.erro.mensagem = response.data.error.foto[0]
-                                    this.erro.mensagem = response.data.error.foto
-                                    
-                                    
-                                    setTimeout(() => {this.erro.mostrar = false;}, 2000);
+                        } else if (response.data.error.foto != undefined) {
+                            this.erro.mostrar = true;
+                            this.tipo.alerta = "warning";
 
-                                    
-                                }else if(response.data.error.emailInvalido != undefined)
-                                {
-                                    this.erro.mostrar = true;
-                                    this.tipo.alerta = "error";
-                                    this.erro.mensagem = response.data.error.emailInvalido
-                                    
-                                    setTimeout(() => {this.erro.mostrar = false;
-                                    }, 2000);
+                            this.erro.mensagem = response.data.error.foto[0]
+                            this.erro.mensagem = response.data.error.foto
 
-                                    
-                                }
-                                
-                                
-                                
-                            }else
-                            {
-                                document.getElementById('foto').value = "";
-                                this.registro.nome = "";
-                                this.registro.email ="";
-                                this.registro.telefone ="";
-                                this.registro.senha="";
-                                
-                                if(response.data.mensagem != undefined)
-                                {
 
-                                    this.erro.mostrar = true;
-                                    this.tipo.alerta = "success";
-                                    this.erro.mensagem = response.data.mensagem;
-                                    setTimeout(() => {
-                                        this.erro.mostrar = false;
-                                        this.dialog = false;
-                                    }, 2000);
+                            setTimeout(() => { this.erro.mostrar = false; }, 2000);
+
+
+                        } else if (response.data.error.emailInvalido != undefined) {
+                            this.erro.mostrar = true;
+                            this.tipo.alerta = "error";
+                            this.erro.mensagem = response.data.error.emailInvalido
+
+                            setTimeout(() => {
+                                this.erro.mostrar = false;
+                            }, 2000);
+
+
+                        }
 
 
 
-                                }
-                                
-                                    
-                                    
-                                
-                                this.mostrar();
+                    } else {
+                        document.getElementById('foto').value = "";
+                        this.registro.nome = "";
+                        this.registro.email = "";
+                        this.registro.telefone = "";
+                        this.registro.senha = "";
 
-                            }
-                            
+                        if (response.data.mensagem != undefined) {
 
-                },
-                novoRegistro:function(){
-                    
-                    
-                    this.registro.nome = "";
-                    this.registro.email ="";
-                    this.registro.telefone ="";
-                    this.registro.senha="";
-                    
-                    this.dialog=true;
-                    
-                    this.tipoRegistro = " Novo"
+                            this.erro.mostrar = true;
+                            this.tipo.alerta = "success";
+                            this.erro.mensagem = response.data.mensagem;
+                            setTimeout(() => {
+                                this.erro.mostrar = false;
+                                this.dialog = false;
+                            }, 2000);
 
-                    
-            
-                    if(document.getElementById('foto') != null)
-                    {
-                        document.getElementById('foto').value= "";
-                    
+
+
+                        }
+
+
+
+
+                        this.mostrar();
 
                     }
-                    
-                    
 
-                    
+
+                },
+                novoRegistro: function () {
+
+
+                    this.registro.nome = "";
+                    this.registro.email = "";
+                    this.registro.telefone = "";
+                    this.registro.senha = "";
+
+                    this.dialog = true;
+
+                    this.tipoRegistro = " Novo"
+
+
+
+                    if (document.getElementById('foto') != null) {
+                        document.getElementById('foto').value = "";
+
+
+                    }
+
+
+
+
                     this.opcao = "criarNovoRegistro"
                 },
-                salvarRegistro: function()
-                {
-                    if( this.opcao == "criarNovoRegistro" )
-                    {
+                salvarRegistro: function () {
+                    if (this.opcao == "criarNovoRegistro") {
                         this.criarNovoRegistro();
-                    }else if(this.opcao == "editarRegistro")
-                    {
+                    } else if (this.opcao == "editarRegistro") {
                         this.editandoRegistro();
 
                     }
-                    
-                    
+
+
                 },
-                criarNovoRegistro:function(){
+                criarNovoRegistro: function () {
                     formData.append('nome', this.registro.nome);
                     formData.append('email', this.registro.email);
                     formData.append('telefone', parseInt(this.registro.telefone));
                     formData.append('senha', this.registro.senha);
 
                     let urlPost = "http://127.0.0.1:8000/api/registers/";
-                    
-                    axios.post(urlPost, formData,{headers: {
 
-                        'Content-Type': 'multipart/form-data'
-                        }}).then(response=>{
-                            
-                            
+                    axios.post(urlPost, formData, {
+                        headers: {
+
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    }).then(response => {
 
 
-                           this.validacoeRespostaBackEnd(response);
-                            
-                            
-                            
-                            
+
+
+                        this.validacoeRespostaBackEnd(response);
+
+
+
+
                     })
 
-                    
 
-                   
+
+
 
 
                 },
-                editarRegistro:function(id,nome,email,telefone,senha,foto)
-                {
-            
+                editarRegistro: function (id, nome, email, telefone, senha, foto) {
+
                     this.dialog = true;
-                   
-                    
+
+
                     this.tipoRegistro = " Edição"
                     this.registro.id = id;
                     this.registro.nome = nome;
                     this.registro.email = email;
-                    this.registro.telefone= telefone;
-                    this.registro.senha= senha;
+                    this.registro.telefone = telefone;
+                    this.registro.senha = senha;
                     this.registro.foto = foto;
                     this.condEdicao = true;
-                    this.opcao= "editarRegistro";
+                    this.opcao = "editarRegistro";
 
                 },
-                deletandoRegistro(id)
-                {
+                deletandoRegistro(id) {
                     Swal.fire({
-                        title: 'Deseja excluir o Registro?',   
-                        confirmButtonText: `Confirmar`,                  
-                        showCancelButton: true,                          
-                    }).then((result) => {                
-                        if (result.isConfirmed) { 
-                            let urlDel = "http://127.0.0.1:8000/api/registers/"+id;
+                        title: 'Deseja excluir o Registro?',
+                        confirmButtonText: `Confirmar`,
+                        showCancelButton: true,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            let urlDel = "http://127.0.0.1:8000/api/registers/" + id;
                             console.log(urlDel)
                             console.log(id)
 
-                            axios.delete(urlDel).then(response=>{
+                            axios.delete(urlDel).then(response => {
                                 this.mostrar();
-                               
-                                
-                                
-                        
-                               
-                            
-                            
-                            }) 
-                            
-                            
-                            
-                        Swal.fire('Excluido com  Sucesso!!!', '', 'success')
-                        } else if (result.isDenied) {                  
-                        }
-                        
-                    }); 
-                               
-                     
-                    
-                    
-                },
-                editandoRegistro:function()
-                {
+                            })
 
-                    if(this.controlador == true)
-                    {
-                        let urlEdit ="http://127.0.0.1:8000/api/editando";
+
+
+                            Swal.fire('Excluido com  Sucesso!!!', '', 'success')
+                        } else if (result.isDenied) {
+                        }
+
+                    });
+
+
+
+
+                },
+                editandoRegistro: function () {
+
+                    if (this.controlador == true) {
+                        let urlEdit = "http://127.0.0.1:8000/api/editando";
                         formData.append('id', this.registro.id);
                         formData.append('nome', this.registro.nome);
                         formData.append('email', this.registro.email);
                         formData.append('telefone', this.registro.telefone);
                         formData.append('senha', this.registro.senha);
-                        axios.post(urlEdit, formData,{headers: {
+                        axios.post(urlEdit, formData, {
+                            headers: {
 
-                        'Content-Type': 'multipart/form-data'
-                        }}).then(response=>{
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }).then(response => {
                             console.log(response)
                             this.validacoeRespostaBackEnd(response);
                             this.condEdicao = false;
-                            
-                            
+
+
                         })
 
-                    }else
-                    {
-                        
-                        let urlEdit ="http://127.0.0.1:8000/api/editando";
+                    } else {
+
+                        let urlEdit = "http://127.0.0.1:8000/api/editando";
                         formData.append('id', this.registro.id);
                         formData.append('nome', this.registro.nome);
                         formData.append('email', this.registro.email);
@@ -440,47 +433,26 @@
                         formData.append('senha', this.registro.senha);
                         formData.append('url', this.registro.foto);
 
-                        axios.post(urlEdit, formData).then(response=>{
+                        axios.post(urlEdit, formData).then(response => {
                             console.log(response)
                             this.validacoeRespostaBackEnd(response);
                             this.condEdicao = false;
-                            
-                            
-                            
                         })
-
 
                     }
 
-                    
-
                 },
-                fileEscolhido: function(event)
-                {
-                    
-                    
+                fileEscolhido: function (event) {
                     let file = document.getElementById('foto').files[0];
 
-                    
-
-                    
                     formData.append('foto', file);
 
                     this.controlador = true;
-
-                   
-                    
-
-
-                    
                 }
-               
-
-
-
             }
         })
     </script>
-    
+
 </body>
+
 </html>

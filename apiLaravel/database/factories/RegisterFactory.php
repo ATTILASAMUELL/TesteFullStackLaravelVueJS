@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 class RegisterFactory extends Factory
 {
@@ -18,7 +19,8 @@ class RegisterFactory extends Factory
             'email' => $this->faker->unique()->email,
             'password' => bcrypt('password'),
             'phone' => $this->faker->phoneNumber(),
-            'picture' => $this->faker->url()
+            'picture' =>  'perfil'. Arr::random([1,2,3]). '.jpg',
+
         ];
     }
 }
