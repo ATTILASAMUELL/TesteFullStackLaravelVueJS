@@ -134,7 +134,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.0.2/dist/sweetalert2.all.min.js"></script>
     
     <script>
-        let url = "http://127.0.0.1:8000/api/registro";
+        let url = "http://127.0.0.1:8000/api/registers";
        
         Vue.config.productionTip = false
         
@@ -181,7 +181,7 @@
             methods:{
                 mostrar:function(){
                     
-                    let urlGet = "http://127.0.0.1:8000/api/registro";
+                    let urlGet = "http://127.0.0.1:8000/api/registers";
                     axios.get(urlGet).then(response =>{
                         
                         
@@ -332,7 +332,7 @@
                     formData.append('telefone', parseInt(this.registro.telefone));
                     formData.append('senha', this.registro.senha);
 
-                    let urlPost = "http://127.0.0.1:8000/api/registro/";
+                    let urlPost = "http://127.0.0.1:8000/api/registers/";
                     
                     axios.post(urlPost, formData,{headers: {
 
@@ -380,7 +380,7 @@
                         showCancelButton: true,                          
                     }).then((result) => {                
                         if (result.isConfirmed) { 
-                            let urlDel = "http://127.0.0.1:8000/api/registro/"+id;
+                            let urlDel = "http://127.0.0.1:8000/api/registers/"+id;
                             console.log(urlDel)
                             console.log(id)
 
