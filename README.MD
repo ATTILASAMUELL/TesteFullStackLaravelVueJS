@@ -77,7 +77,7 @@ https://user-images.githubusercontent.com/76443540/164589339-c85aed31-3bf8-4c63-
 ----------------------------------------------------> Rodar migration do Laravel 8.* <---------------------------------------------------------
 <br>
 <br>
-----------------------------------------------------> Rodar o php artisan serve do Laravel 8.* <---------------------------------------------------------
+-----------------------------------------------> Rodar o php artisan serve do Laravel 8.* <---------------------------------------------------------
 <br>
 <br>
 ** A parte do VUE JS - foi usado - vuetifyjs CDN - não precisa baixar e instalar nada, somente conectado a internet.
