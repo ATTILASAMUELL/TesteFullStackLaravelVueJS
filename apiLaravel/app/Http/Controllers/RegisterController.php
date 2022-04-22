@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Register;
 use Illuminate\Http\Request;
 
 class RegisterController extends Controller
@@ -13,6 +14,7 @@ class RegisterController extends Controller
      */
     public function index()
     {
+        return Register::all();
     }
 
     /**
@@ -32,9 +34,9 @@ class RegisterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Register $register)
     {
-        //
+        return $register;
     }
 
     /**

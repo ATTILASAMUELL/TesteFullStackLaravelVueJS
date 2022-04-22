@@ -112,34 +112,7 @@ class RegistrosController extends Controller
         
 
     }
-    public  function listarTodosRegistros()
-    {
-        
-       
-        return json_encode(Registros::all());
-
-    }
-    public function listarRegistro($id)
-    {
-        //Rrota pronta caso precise de alterações no sistema
-        $array = ['error' =>''];
-        $registro = Registros::find($id);
-        
-        if($registro)
-        {
-            $array['registro'] = $registro;
-
-
-        }else
-        {
-           $array['error'] = 'Nenhum registro encontrado';
-
-        }
-        
-        return $array;
-
-
-    }
+    
     public function  alterarRegistro(Request $request)
     {
         $registro = Registros::find($request->input('id'));
