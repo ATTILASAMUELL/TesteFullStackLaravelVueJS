@@ -13,7 +13,6 @@ class RegistrosController extends Controller
     //
     public function criarRegistro(Request $request)
     {
-       
         $array = [ 'error' => ''];
         // VALIDAÇÃO:
         $rules = [
@@ -24,48 +23,36 @@ class RegistrosController extends Controller
             'foto' => 'mimes:jpg'
         ];
         $validator = Validator::make($request->all(), $rules);
-        if($validator->fails())
-        {
+        if ($validator->fails()) {
             $array['errorBoolean'] = true;
             $array['error'] = $validator->messages();
             return $array;
         }
 
         //Inserir mais validação do upload
-        if($request->hasFile('foto'))
-        {
-            if($request->file('foto')->isValid())
-            {
+        if ($request->hasFile('foto')) {
+            if ($request->file('foto')->isValid()) {
                 $extencao = $request->file('foto')->extension();
-                if($extencao != 'jpg')
-                {
+                if ($extencao != 'jpg') {
                     $array['errorBoolean'] = true;
                     $array['error'] = [ 'foto' => 'Arquivo com extenção diferente de JPG'];
                     return $array;
-                }else
-                {
+                } else {
                     $foto = $request->file('foto')->store('public');
-                    
                 }
-
-            }else
-            {
+            } else {
                 $array['errorBoolean'] = true;
                 $array['error'] = [ 'foto' => 'Arquivo invalido'];
                 return $array;
-
             }
-
-        }else
-        {
+        } else {
             $array['errorBoolean'] = true;
             $array['error'] = [ 'foto' => 'Não foi enviado arquivo nenhum'];
             return $array;
-
         }
         $nome = $request->input('nome');
         $email =  $request->input('email');
-        $senha = Hash::make( $request->input('senha'));
+        $senha = Hash::make($request->input('senha'));
         $telefone =  $request->input('telefone');
         $url =  asset(Storage::url($foto));
 
@@ -80,45 +67,28 @@ class RegistrosController extends Controller
         
         $verificaSeExisteEmail = $this->verificaEmail($email);
         
-        if($verificaSeExisteEmail == true){
-            
+        if ($verificaSeExisteEmail == true) {
             $registro->save();
             $verificaSeFoiInserido =  $this->verificaEmail($email);
-            if($verificaSeFoiInserido == false)
-            {
+            if ($verificaSeFoiInserido == false) {
                 $array['mensagem']= 'Registro inserido com sucesso!!!';
                 return $array;
-
-            }else{
+            } else {
                 $array['errorBoolean'] = true;
                 $array['error'] = [ 'emailInvalido' =>'Registro não inserido!!!'];
                 return  $array;
-
-
             }
-            
-
-        }else{
-            
+        } else {
             $array['errorBoolean'] = true;
             $array['error'] = [ 'emailInvalido' => 'Registro com esse EMAIL já existe!!!'];
             return json_encode($array);
-
         }
-        
-       
-
-
-        
-
     }
     
-    public function  alterarRegistro(Request $request)
+    public function alterarRegistro(Request $request)
     {
         $registro = Registros::find($request->input('id'));
-        if($registro){
-            
-            
+        if ($registro) {
             $array = [ 'error' => ''];
             // VALIDAÇÃO:
             $verificao = [
@@ -129,45 +99,34 @@ class RegistrosController extends Controller
                 
             ];
             $validador = Validator::make($request->all(), $verificao);
-            if($validador->fails())
-            {
-               
+            if ($validador->fails()) {
                 $array['errorBoolean'] = true;
                 $array['error'] = $validador->messages();
                 return $array;
             }
 
             //Inserir mais validação do upload
-            if($request->hasFile('foto'))
-            {
-                if($request->file('foto')->isValid())
-                {
+            if ($request->hasFile('foto')) {
+                if ($request->file('foto')->isValid()) {
                     $extencao = $request->file('foto')->extension();
-                    if($extencao != 'jpg')
-                    {
+                    if ($extencao != 'jpg') {
                         $array['errorBoolean'] = true;
                         $array['error'] = [ 'foto' => 'Arquivo com extenção diferente de JPG'];
                         return $array;
-                    }else
-                    {
+                    } else {
                         $foto = $request->file('foto')->store('public');
-                        
                     }
-    
-                }else
-                {
+                } else {
                     $array['errorBoolean'] = true;
                     $array['error'] = [ 'foto' => 'Arquivo invalido'];
                     return $array;
-    
                 }
-    
             }
             
             
             $nome = $request->input('nome');
             $email =  $request->input('email');
-            $senha = Hash::make( $request->input('senha'));
+            $senha = Hash::make($request->input('senha'));
             $telefone =  $request->input('telefone');
             
 
@@ -176,15 +135,11 @@ class RegistrosController extends Controller
             $registro->email = $email;
             $registro->senha = $senha;
             $registro->telefone = $telefone;
-            if($request->input('url'))
-            {
+            if ($request->input('url')) {
                 $registro->foto= $request->input('url');
-
-            }else
-            {
+            } else {
                 $url =  asset(Storage::url($foto));
                 $registro->foto= $url;
-
             }
             
             $registro->save();
@@ -193,66 +148,26 @@ class RegistrosController extends Controller
 
 
             return $array;
-        }else
-        {
+        } else {
             $array['error'] = 'registro inexistente';
             return $array;
-
         }
-
     }
 
-    public function deletandoRegistro($id)
-    {
-        $array = ['error' => false, 'mensagem' => ''];
-
-        $registro = Registros::find($id);
-        if($registro)
-        {
-            $registro->delete();
-            
-            
-
-        }else
-        {
-            $array['error']= true;
-            $array['mensagem']= 'Nenhum registro encontrado com esse ID';
-            return $array;
-        }
-
-        if(!$registro)
-        {
-                
-            $array['mensagem']= 'Registro excluido com sucesso!!!';
-            return $array;
-
-        }
-        
-
-    }
+    
 
     public function verificaEmail($email)
     {
         $verifica = Registros::all()->where('email', '=', $email);
         
         
-        if($verifica)
-        {
+        if ($verifica) {
             $array['registro'] = $verifica;
-            if(!count( $array['registro']) > 0)
-            {
+            if (!count($array['registro']) > 0) {
                 return true;
-
-            }else
-            {
+            } else {
                 return false;
-
             }
-            
         }
-
-        
     }
-
-    
 }
