@@ -11,7 +11,12 @@ Candidato: ATTILA SAMUELL NUNES TABORY
   
   
   <br>
+  <img align"center" alt="html" src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"/>
+  <img align"center" alt="vuejs" src="https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vue.js&logoColor=4FC08D"/>
+  <img align"center" alt="laravel" src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white"/>
   <img align"center" alt="mysql" src="https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white"/>
+
+  
   
   
   
@@ -37,7 +42,7 @@ Sistema Registro - Crud - Completo
 
 <br>
 
--  Video  teste feito no sistema:
+-----  Video  teste feito no sistema:
 
 
 https://user-images.githubusercontent.com/76443540/164589339-c85aed31-3bf8-4c63-a597-85804171c9e2.mp4
