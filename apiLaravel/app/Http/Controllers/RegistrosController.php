@@ -165,7 +165,7 @@ class RegistrosController extends Controller
             }
 
             //Inserir mais validação do upload
-            if($request->hasFile('foto'))
+            if(($request->hasFile('foto')) && (!$request->input('url')) )
             {
                 if($request->file('foto')->isValid())
                 {

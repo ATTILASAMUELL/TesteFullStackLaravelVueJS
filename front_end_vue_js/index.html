@@ -20,13 +20,13 @@
             <v-main>      
                 <v-card class="mx-auto mt-5" max-width="1300">
                     <br>
-                <v-btn rounded color="green accent-2" @click="novoRegistro()">Novo Registro</v-btn> 
+                <v-btn rounded color="green " @click="novoRegistro()">Novo Registro</v-btn> 
 
                    <!-- Tabla y formulario -->
                         <v-simple-table class="mt-5">
                             <template v-slot:default>
                                 <thead>
-                                    <tr class="light-blue darken-2">
+                                    <tr class="light-green darken-3">
                                         <th class="white--text">ID</th>
                                         <th class="white--text">NOME</th>
                                         <th class="white--text">EMAIL</th>
@@ -138,7 +138,7 @@
        
         Vue.config.productionTip = false
         
-        let formData = new FormData();
+        
         let aplication = new Vue({
             el: '#app',
             vuetify: new Vuetify(),
@@ -327,14 +327,16 @@
                     
                 },
                 criarNovoRegistro:function(){
-                    formData.append('nome', this.registro.nome);
-                    formData.append('email', this.registro.email);
-                    formData.append('telefone', parseInt(this.registro.telefone));
-                    formData.append('senha', this.registro.senha);
+                    let formCriarRegistro = new FormData();
+                    formCriarRegistro.append('nome', this.registro.nome);
+                    formCriarRegistro.append('email', this.registro.email);
+                    formCriarRegistro.append('telefone', parseInt(this.registro.telefone));
+                    formCriarRegistro.append('senha', this.registro.senha);
+                    formCriarRegistro.append('foto', this.registro.foto);
 
                     let urlPost = "http://127.0.0.1:8000/api/registro/";
                     
-                    axios.post(urlPost, formData,{headers: {
+                    axios.post(urlPost, formCriarRegistro,{headers: {
 
                         'Content-Type': 'multipart/form-data'
                         }}).then(response=>{
@@ -343,6 +345,14 @@
 
 
                            this.validacoeRespostaBackEnd(response);
+
+                           this.registro.id = null
+                           this.registro.nome = ""
+                           this.registro.email = ""
+                           this.registro.telefone = ""
+                           this.registro.senha = ""
+                           this.registro.foto = ""
+
                             
                             
                             
@@ -412,38 +422,68 @@
 
                     if(this.controlador == true)
                     {
+                        
+                        
+                        let formDataEdit = new FormData();
+                        
                         let urlEdit ="http://127.0.0.1:8000/api/editando";
-                        formData.append('id', this.registro.id);
-                        formData.append('nome', this.registro.nome);
-                        formData.append('email', this.registro.email);
-                        formData.append('telefone', this.registro.telefone);
-                        formData.append('senha', this.registro.senha);
-                        axios.post(urlEdit, formData,{headers: {
+                        formDataEdit.append('id', this.registro.id);
+                        formDataEdit.append('nome', this.registro.nome);
+                        formDataEdit.append('email', this.registro.email);
+                        formDataEdit.append('telefone', this.registro.telefone);
+                        formDataEdit.append('senha', this.registro.senha);
+                        formDataEdit.append('foto', this.registro.foto);
+                        
+                        
+
+                        axios.post(urlEdit, formDataEdit,{headers: {
 
                         'Content-Type': 'multipart/form-data'
                         }}).then(response=>{
-                            console.log(response)
+                            
                             this.validacoeRespostaBackEnd(response);
                             this.condEdicao = false;
+
+                            this.controlador == false;
+                            this.registro.id = null
+                            this.registro.nome = ""
+                            this.registro.email = ""
+                            this.registro.telefone = ""
+                            this.registro.senha = ""
+                            this.registro.foto = ""
+
                             
                             
                         })
 
                     }else
                     {
+                       
+                        
+                        let formDataEditSemIMG = new FormData();
+                        
                         
                         let urlEdit ="http://127.0.0.1:8000/api/editando";
-                        formData.append('id', this.registro.id);
-                        formData.append('nome', this.registro.nome);
-                        formData.append('email', this.registro.email);
-                        formData.append('telefone', this.registro.telefone);
-                        formData.append('senha', this.registro.senha);
-                        formData.append('url', this.registro.foto);
+                        formDataEditSemIMG.append('id', this.registro.id);
+                        formDataEditSemIMG.append('nome', this.registro.nome);
+                        formDataEditSemIMG.append('email', this.registro.email);
+                        formDataEditSemIMG.append('telefone', this.registro.telefone);
+                        formDataEditSemIMG.append('senha', this.registro.senha);
+                        formDataEditSemIMG.append('url', this.registro.foto);
+                        
 
-                        axios.post(urlEdit, formData).then(response=>{
-                            console.log(response)
+                        
+
+                        axios.post(urlEdit, formDataEditSemIMG).then(response=>{
+                            
                             this.validacoeRespostaBackEnd(response);
                             this.condEdicao = false;
+                            this.registro.id = null
+                            this.registro.nome = ""
+                            this.registro.email = ""
+                            this.registro.telefone = ""
+                            this.registro.senha = ""
+                            this.registro.foto = ""
                             
                             
                             
@@ -463,10 +503,16 @@
 
                     
 
+                    this.registro.foto = file;
                     
-                    formData.append('foto', file);
 
-                    this.controlador = true;
+                    if(this.opcao == "editarRegistro")
+                    {
+                        this.controlador = true;
+
+                    }
+
+                    
 
                    
                     
