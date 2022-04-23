@@ -41,10 +41,10 @@
                             <tbody id="bodyTabela">
                                 <tr v-for="register in registers" :key="register.id">
                         
-                                    <td>{{ register.name }}</td>
-                                    <td>{{ register.email }}</td>
+                                    <td>@{{ register.name }}</td>
+                                    <td>@{{ register.email }}</td>
                                     <td>******************</td>
-                                    <td>{{ register.phone }}</td>
+                                    <td>@{{ register.phone }}</td>
                                     <td>
                                         <v-img v-if="register.picture" :src="`http://localhost:8000/images/${register.picture}`" max-height="150" max-width="100"></v-img>
                                     </td>
@@ -62,7 +62,7 @@
                     <!-- Componente de Diálogo para CRIAR E EDITAR -->
                     <v-dialog v-model="dialog" max-width="500">
                         <v-card>
-                            <v-card-title class="blue-grey darken-1 white--text">Registro {{tipoRegistro}}
+                            <v-card-title class="blue-grey darken-1 white--text">Registro @{{tipoRegistro}}
                             </v-card-title>
                             <br>
                             <v-card-text>
@@ -71,7 +71,7 @@
                                         <v-row>
                                             <v-col cols="20" md="40">
                                                 <v-text-field v-model="registro.name" label="Nome" solo required>
-                                                    {{registro.name}}</v-text-field>
+                                                    @{{registro.name}}</v-text-field>
                                             </v-col>
                                             <v-col cols="20" md="40">
                                                 <v-text-field v-model="registro.email" label="Email" solo required>
@@ -90,7 +90,7 @@
                                                 <div v-if="condEdicao == true & tipoRegistro == ' Edição' ">
                                                     <div id="divFtAtual">Foto Atual:</div>
                                                     <img id="fotoEditar" height="50" width="50"
-                                                        :src="`${registro.foto}`">
+                                                    :src="`http://localhost:8000/images/${registro.picture}`">
                                                     <br>
                                                     <div id="divFtNova">Foto Nova:</div>
 
@@ -105,7 +105,7 @@
                                             <br>
                                             <v-col cols="12">
                                                 <div v-if="erro.mostrar">
-                                                    <v-alert :type="`${tipo.alerta}`">{{erro.mensagem}}</v-alert>
+                                                    <v-alert :type="`${tipo.alerta}`">@{{erro.mensagem}}</v-alert>
                                                 </div>
 
 
@@ -118,7 +118,8 @@
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn @click="dialog=false">Cancelar</v-btn>
-                                <v-btn @click="salvarRegistro()" type="submit" color="indigo" dark>Salvar</v-btn>
+                                <v-btn @click="criarNovoRegistro()" type="submit" color="indigo" dark>Salvar</v-btn>
+                                <v-btn @click="editandoRegistro()" type="submit" color="indigo" dark>Editar</v-btn>
                             </v-card-actions>
                             </v-form>
                         </v-card>
@@ -138,8 +139,6 @@
         let url = "http://127.0.0.1:8000/api/registers";
 
         Vue.config.productionTip = false
-
-        let formData = new FormData();
         let aplication = new Vue({
             el: '#app',
             vuetify: new Vuetify(),
@@ -167,17 +166,20 @@
                     }
                 }
             },
+
             created() {
                 this.mostrar();
             },
 
             methods: {
+                
                 mostrar: function () {
                     let urlGet = "http://127.0.0.1:8000/api/registers";
                     axios.get(urlGet).then(response => {
                         this.registers = response.data;
                     })
                 },
+
                 validacoeRespostaBackEnd: function (response) {
 
                     if (response.data.errorBoolean) {
@@ -258,21 +260,8 @@
 
 
                 },
-                novoRegistro: function () {
-                    this.registro.name = "";
-                    this.registro.email = "";
-                    this.registro.phone = "";
-                    this.registro.password = "";
-                    this.dialog = true;
-                    this.tipoRegistro = " Novo"
 
-                    if (document.getElementById('foto') != null) {
-                        document.getElementById('foto').value = "";
 
-                    }
-
-                    this.opcao = "criarNovoRegistro"
-                },
                 salvarRegistro: function () {
                     if (this.opcao == "criarNovoRegistro") {
                         this.criarNovoRegistro();
@@ -281,7 +270,11 @@
 
                     }
                 },
+
                 criarNovoRegistro: function () {
+
+                    let formData = new FormData();
+
                     formData.append('name', this.registro.name);
                     formData.append('email', this.registro.email);
                     formData.append('phone', parseInt(this.registro.phone));
@@ -291,7 +284,8 @@
 
                     axios.post(urlPost, formData, {
                         headers: {
-                            'Content-Type': 'multipart/form-data'
+                            'Content-type': 'multipart/form-data',
+                            'Accept': 'application/json'
                         }
                     }).then(response => {
                         //this.validacoeRespostaBackEnd(response);
@@ -315,22 +309,6 @@
                     })
                 },
 
-                editarRegistro: function (id, nome, email, telefone, senha, foto) {
-
-                    this.dialog = true;
-
-
-                    this.tipoRegistro = " Edição"
-                    this.registro.id = id;
-                    this.registro.nome = nome;
-                    this.registro.email = email;
-                    this.registro.telefone = telefone;
-                    this.registro.senha = senha;
-                    this.registro.foto = foto;
-                    this.condEdicao = true;
-                    this.opcao = "editarRegistro";
-
-                },
                 deletandoRegistro(id) {
                     Swal.fire({
                         title: 'Deseja excluir o Registro?',
@@ -346,59 +324,84 @@
                                 this.mostrar();
                             })
 
-
-
                             Swal.fire('Excluido com  Sucesso!!!', '', 'success')
                         } else if (result.isDenied) {
                         }
 
                     });
 
+                },
 
+                editarRegistro: function (id, nome, email, telefone, senha, foto) {
 
+                    this.dialog = true;
+
+                    this.tipoRegistro = " Edição"
+                    this.registro.id = id;
+                    this.registro.name = nome;
+                    this.registro.email = email;
+                    this.registro.phone = telefone;
+                    this.registro.password = senha;
+                    this.registro.picture = foto;
+                    this.condEdicao = true;
+                    this.opcao = "editarRegistro";
 
                 },
-                editandoRegistro: function () {
 
-                    if (this.controlador == true) {
-                        let urlEdit = "http://127.0.0.1:8000/api/editando";
-                        formData.append('id', this.registro.id);
-                        formData.append('nome', this.registro.nome);
-                        formData.append('email', this.registro.email);
-                        formData.append('telefone', this.registro.telefone);
-                        formData.append('senha', this.registro.senha);
-                        axios.post(urlEdit, formData, {
-                            headers: {
+                novoRegistro: function () {
+                    this.registro.name = "";
+                    this.registro.email = "";
+                    this.registro.phone = "";
+                    this.registro.password = "";
+                    this.dialog = true;
+                    this.tipoRegistro = " Novo"
 
-                                'Content-Type': 'multipart/form-data'
-                            }
-                        }).then(response => {
-                            console.log(response)
-                            this.validacoeRespostaBackEnd(response);
-                            this.condEdicao = false;
-
-
-                        })
-
-                    } else {
-
-                        let urlEdit = "http://127.0.0.1:8000/api/editando";
-                        formData.append('id', this.registro.id);
-                        formData.append('nome', this.registro.nome);
-                        formData.append('email', this.registro.email);
-                        formData.append('telefone', this.registro.telefone);
-                        formData.append('senha', this.registro.senha);
-                        formData.append('url', this.registro.foto);
-
-                        axios.post(urlEdit, formData).then(response => {
-                            console.log(response)
-                            this.validacoeRespostaBackEnd(response);
-                            this.condEdicao = false;
-                        })
+                    if (document.getElementById('foto') != null) {
+                        document.getElementById('foto').value = "";
 
                     }
 
+                    this.opcao = "criarNovoRegistro"
                 },
+
+                editandoRegistro: function () {
+
+                    let urlEdit = "http://localhost:8000/api/registers/" + this.registro.id;
+                    
+                    axios.put(urlEdit, {
+
+                        name: this.registro.name,
+                        email: this.registro.email,
+                        phone: this.registro.phone,
+                        password: this.registro.password
+
+                    }, {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    }).then(response => {
+                        console.log(response)
+                        //this.validacoeRespostaBackEnd(response);
+                        this.condEdicao = false;
+
+                        this.registers.name = "";
+                        this.registers.email = "";
+                        this.registers.phone = "";
+                        this.registers.password = "";
+
+                        this.erro.mostrar = true;
+                        this.tipo.alerta = "success";
+                        this.erro.mensagem = 'Registro atualizado com sucesso.';
+
+                        setTimeout(() => {
+                            this.erro.mostrar = false;
+                            this.dialog = false;
+                        }, 2000);
+                        
+                        this.mostrar();
+                    })
+                },
+
                 fileEscolhido: function (event) {
                     let file = document.getElementById('foto').files[0];
 

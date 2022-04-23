@@ -60,9 +60,23 @@ class RegisterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Register $register)
     {
-        //
+        $requestValidated = $request->validate([
+            'name' => 'required|min:5',
+            //'email'=> 'required|email|unique:registers',
+            'password'=> 'required|min:9',
+            'phone'=> 'required|numeric|min:5',
+            'picture' => 'nullable|mimes:jpg,png'
+        ]);
+
+        $requestValidated['password'] = bcrypt($requestValidated['password']);
+
+        if ($request->hasFile('picture') && $request->file('picture')->isValid()) {
+            $requestValidated['picture'] = $request->file('picture')->store('images');
+        }
+
+        return  $register->update($requestValidated);
     }
 
     /**
