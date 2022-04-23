@@ -21,7 +21,7 @@
             <v-main>
                 <v-card class="mx-auto mt-5" max-width="1300">
                     <br>
-                    <v-btn rounded color="green accent-2" @click="novoRegistro()">Novo Registro</v-btn>
+                    <v-btn rounded color="green accent-2" @click="createRecord()">Novo Registro</v-btn>
 
                     <!-- Tabla y formulario -->
                     <v-simple-table class="mt-5">
@@ -51,79 +51,72 @@
                                     <td></td>
                                     <td>
                                         <v-btn class="teal accent-4" dark
-                                            @click="editarRegistro(register.id, register.name, register.email, register.phone, register.password, register.picture)">
+                                            @click="editRecord(register.id, register.name, register.email, register.phone, register.password, register.picture)">
                                             Editar</v-btn>
-                                        <v-btn class="error" dark @click="deletandoRegistro(register.id)">Deletar</v-btn>
+                                        <v-btn class="error" dark @click="destroyRecord(register.id)">Deletar</v-btn>
                                     </td>
                                 </tr>
                             </tbody>
                         </template>
-                    </v-simple-table </v-card>
+                    </v-simple-table
+                </v-card>
+
                     <!-- Componente de Diálogo para CRIAR E EDITAR -->
-                    <v-dialog v-model="dialog" max-width="500">
-                        <v-card>
-                            <v-card-title class="blue-grey darken-1 white--text">Registro @{{tipoRegistro}}
-                            </v-card-title>
-                            <br>
-                            <v-card-text>
-                                <v-form>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col cols="20" md="40">
-                                                <v-text-field v-model="registro.name" label="Nome" solo required>
-                                                    @{{registro.name}}</v-text-field>
-                                            </v-col>
-                                            <v-col cols="20" md="40">
-                                                <v-text-field v-model="registro.email" label="Email" solo required>
-                                                </v-text-field>
-                                            </v-col>
-                                            <v-col cols="20" md="40">
-                                                <v-text-field v-model="registro.phone" label="Telefone" solo
-                                                    required></v-text-field>
-                                            </v-col>
-                                            <v-col cols="20" md="40">
-                                                <v-text-field v-model="registro.password" label="Senha" solo required>
-                                                </v-text-field>
-                                            </v-col>
+                <v-dialog v-model="dialog" max-width="500">
+                    <v-card>
+                        <v-card-title class="blue-grey darken-1 white--text">Registro 
+                        </v-card-title>
+                        <br>
+                        <v-card-text>
+                            <v-form>
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="20" md="40">
+                                            <v-text-field v-model="registro.name" label="Nome" solo required>
+                                                @{{registro.name}}</v-text-field>
+                                        </v-col>
+                                        <v-col cols="20" md="40">
+                                            <v-text-field v-model="registro.email" label="Email" solo required>
+                                            </v-text-field>
+                                        </v-col>
+                                        <v-col cols="20" md="40">
+                                            <v-text-field v-model="registro.phone" label="Telefone" solo
+                                                required></v-text-field>
+                                        </v-col>
+                                        <v-col cols="20" md="40">
+                                            <v-text-field v-model="registro.password" label="Senha" solo required>
+                                            </v-text-field>
+                                        </v-col>
 
-                                            <v-col cols="12">
-                                                <div v-if="condEdicao == true & tipoRegistro == ' Edição' ">
-                                                    <div id="divFtAtual">Foto Atual:</div>
-                                                    <img id="fotoEditar" height="50" width="50"
-                                                    :src="`http://localhost:8000/images/${registro.picture}`">
-                                                    <br>
-                                                    <div id="divFtNova">Foto Nova:</div>
+                                        <v-col cols="12">
+                                            <div v-if="edit">
+                                                <div id="divFtAtual">Foto Atual:</div>
+                                                <img id="fotoEditar" height="50" width="50"
+                                                :src="`http://localhost:8000/images/${registro.picture}`">
+                                                <br>
+                                                <div id="divFtNova">Foto Nova:</div>
+                                            </div>
 
-                                                </div>
-
-                                                <input type="file" required id="foto" @change="fileEscolhido" />
-
-
-
-                                            </v-col>
-                                            <br>
-                                            <br>
-                                            <v-col cols="12">
-                                                <div v-if="erro.mostrar">
-                                                    <v-alert :type="`${tipo.alerta}`">@{{erro.mensagem}}</v-alert>
-                                                </div>
-
-
-                                            </v-col>
-
-
-                                        </v-row>
-                                    </v-container>
-                            </v-card-text>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn @click="dialog=false">Cancelar</v-btn>
-                                <v-btn @click="criarNovoRegistro()" type="submit" color="indigo" dark>Salvar</v-btn>
-                                <v-btn @click="editandoRegistro()" type="submit" color="indigo" dark>Editar</v-btn>
-                            </v-card-actions>
-                            </v-form>
-                        </v-card>
-                    </v-dialog>
+                                            <input type="file" required id="foto" @change="fileEscolhido" />
+                                        </v-col>
+                                        <br>
+                                        <br>
+                                        <v-col cols="12">
+                                            <div v-for="error in errors">
+                                                <v-alert type="error">@{{error[0]}}</v-alert>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn @click="dialog=false">Cancelar</v-btn>
+                            <v-btn @click="storeOrUpdate()" type="submit" color="indigo" dark>@{{this.btnLabel}}</v-btn>
+                        </v-card-actions>
+                        </v-form>
+                    </v-card>
+                </v-dialog>
             </v-main>
         </v-app>
     </div>
@@ -146,17 +139,16 @@
                 return {
                     registers: [],
                     dialog: false,
-                    opcao: '',
-                    condEdicao: false,
+                    
                     controlador: false,
-                    erro: {
-                        mostrar: false,
-                        mensagem: ""
-                    },
+                    errors: [],
+                    edit: false,
+
                     tipo: {
                         alerta: "error"
                     },
-                    tipoRegistro: '',
+                   
+                    btnLabel: 'Salvar',
                     registro: {
                         name: "",
                         email: "",
@@ -167,112 +159,30 @@
                 }
             },
 
-            created() {
-                this.mostrar();
+            mounted() {
+                this.listAllRegisters();
             },
 
             methods: {
-                
-                mostrar: function () {
+
+                listAllRegisters: function () {
                     let urlGet = "http://127.0.0.1:8000/api/registers";
                     axios.get(urlGet).then(response => {
                         this.registers = response.data;
                     })
                 },
 
-                validacoeRespostaBackEnd: function (response) {
 
-                    if (response.data.errorBoolean) {
-                        if (response.data.error.nome != undefined) {
-                            this.erro.mostrar = true;
-                            this.tipo.alerta = "warning";
-                            this.erro.mensagem = response.data.error.nome[0]
-                            setTimeout(() => {
-
-                                this.erro.mostrar = false;
-                            }, 2000);
-
-                        } else if (response.data.error.email != undefined) {
-                            this.erro.mostrar = true;
-                            this.tipo.alerta = "warning";
-                            this.erro.mensagem = response.data.error.email[0]
-                            setTimeout(() => { this.erro.mostrar = false; }, 2000);
-
-
-                        } else if (response.data.error.senha != undefined) {
-                            this.erro.mostrar = true;
-                            this.tipo.alerta = "warning";
-                            this.erro.mensagem = response.data.error.senha[0]
-                            setTimeout(() => { this.erro.mostrar = false; }, 2000);
-
-
-                        } else if (response.data.error.telefone != undefined) {
-                            this.erro.mostrar = true;
-                            this.tipo.alerta = "warning";
-                            this.erro.mensagem = response.data.error.telefone[0]
-                            setTimeout(() => { this.erro.mostrar = false; }, 2000);
-
-
-                        } else if (response.data.error.foto != undefined) {
-                            this.erro.mostrar = true;
-                            this.tipo.alerta = "warning";
-
-                            this.erro.mensagem = response.data.error.foto[0]
-                            this.erro.mensagem = response.data.error.foto
-
-
-                            setTimeout(() => { this.erro.mostrar = false; }, 2000);
-
-
-                        } else if (response.data.error.emailInvalido != undefined) {
-                            this.erro.mostrar = true;
-                            this.tipo.alerta = "error";
-                            this.erro.mensagem = response.data.error.emailInvalido
-
-                            setTimeout(() => {
-                                this.erro.mostrar = false;
-                            }, 2000);
-                        }
-
-
-
+                storeOrUpdate: function () {
+                    if (this.edit) {
+                        this.updateRegister();
                     } else {
-                        document.getElementById('foto').value = "";
-                        this.registers.name = "";
-                        this.registers.email = "";
-                        this.registers.phone = "";
-                        this.registers.password = "";
-
-                        if (response.data.mensagem != undefined) {
-
-                            this.erro.mostrar = true;
-                            this.tipo.alerta = "success";
-                            this.erro.mensagem = response.data.mensagem;
-                            setTimeout(() => {
-                                this.erro.mostrar = false;
-                                this.dialog = false;
-                            }, 2000);
-                        }
-
-                        this.mostrar();
-
-                    }
-
-
-                },
-
-
-                salvarRegistro: function () {
-                    if (this.opcao == "criarNovoRegistro") {
-                        this.criarNovoRegistro();
-                    } else if (this.opcao == "editarRegistro") {
-                        this.editandoRegistro();
-
+                        this.storeRecord();
                     }
                 },
 
-                criarNovoRegistro: function () {
-
+                storeRecord: function(){
+                    //
                     let formData = new FormData();
 
                     formData.append('name', this.registro.name);
@@ -288,28 +198,49 @@
                             'Accept': 'application/json'
                         }
                     }).then(response => {
-                        //this.validacoeRespostaBackEnd(response);
 
                         document.getElementById('foto').value = "";
                         this.registers.name = "";
                         this.registers.email = "";
                         this.registers.phone = "";
                         this.registers.password = "";
+                        this.dialog = false;
+                      
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Record created.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
 
-                        this.erro.mostrar = true;
-                        this.tipo.alerta = "success";
-                        this.erro.mensagem = 'Registro salvo com sucesso.';
-
-                        setTimeout(() => {
-                            this.erro.mostrar = false;
-                            this.dialog = false;
-                        }, 2000);
                         
-                        this.mostrar();
-                    })
+                        this.listAllRegisters();
+                    }).catch((error) => {
+                            this.tipo.alerta = "error";
+                            this.errors = error.response.data.errors
+                           
+                        })
+
                 },
 
-                deletandoRegistro(id) {
+                createRecord: function () {
+                  
+                    this.btnLabel = 'Inserir';
+                    this.edit = false;
+                    
+                    this.errors = [];
+                    this.registro.name = "";
+                    this.registro.email = "";
+                    this.registro.phone = "";
+                    this.registro.password = "";
+                    this.dialog = true;
+
+                    if (document.getElementById('foto') != null) {
+                        document.getElementById('foto').value = "";
+                    }
+                },
+
+                destroyRecord(id) {
                     Swal.fire({
                         title: 'Deseja excluir o Registro?',
                         confirmButtonText: `Confirmar`,
@@ -317,11 +248,9 @@
                     }).then((result) => {
                         if (result.isConfirmed) {
                             let urlDel = "http://127.0.0.1:8000/api/registers/" + id;
-                            console.log(urlDel)
-                            console.log(id)
-
+                            
                             axios.delete(urlDel).then(response => {
-                                this.mostrar();
+                                this.listAllRegisters();
                             })
 
                             Swal.fire('Excluido com  Sucesso!!!', '', 'success')
@@ -332,39 +261,25 @@
 
                 },
 
-                editarRegistro: function (id, nome, email, telefone, senha, foto) {
+                editRecord: function (id, nome, email, telefone, senha, foto) {
 
+                    this.btnLabel = 'Atualizar';
+                    this.edit=true;
+                    this.errors = [];
                     this.dialog = true;
-
-                    this.tipoRegistro = " Edição"
+                    
                     this.registro.id = id;
                     this.registro.name = nome;
                     this.registro.email = email;
                     this.registro.phone = telefone;
                     this.registro.password = senha;
                     this.registro.picture = foto;
-                    this.condEdicao = true;
-                    this.opcao = "editarRegistro";
-
+                   
                 },
 
-                novoRegistro: function () {
-                    this.registro.name = "";
-                    this.registro.email = "";
-                    this.registro.phone = "";
-                    this.registro.password = "";
-                    this.dialog = true;
-                    this.tipoRegistro = " Novo"
+                
 
-                    if (document.getElementById('foto') != null) {
-                        document.getElementById('foto').value = "";
-
-                    }
-
-                    this.opcao = "criarNovoRegistro"
-                },
-
-                editandoRegistro: function () {
+                updateRegister: function () {
 
                     let urlEdit = "http://localhost:8000/api/registers/" + this.registro.id;
                     
@@ -377,29 +292,33 @@
 
                     }, {
                         headers: {
-                            'Accept': 'application/json'
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
                         }
                     }).then(response => {
                         console.log(response)
                         //this.validacoeRespostaBackEnd(response);
-                        this.condEdicao = false;
+                       
 
                         this.registers.name = "";
                         this.registers.email = "";
                         this.registers.phone = "";
                         this.registers.password = "";
 
-                        this.erro.mostrar = true;
-                        this.tipo.alerta = "success";
-                        this.erro.mensagem = 'Registro atualizado com sucesso.';
-
-                        setTimeout(() => {
-                            this.erro.mostrar = false;
-                            this.dialog = false;
-                        }, 2000);
+                        this.dialog = false
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Record updated.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
                         
-                        this.mostrar();
+                        this.listAllRegisters();
                     })
+                    .catch((error) => {
+                            this.tipo.alerta = "error";
+                            this.errors = error.response.data.errors
+                        })
                 },
 
                 fileEscolhido: function (event) {
