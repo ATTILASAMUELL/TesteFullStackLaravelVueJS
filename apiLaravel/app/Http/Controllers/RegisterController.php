@@ -64,7 +64,7 @@ class RegisterController extends Controller
     {
         $requestValidated = $request->validate([
             'name' => 'required|min:5',
-            //'email'=> 'required|email|unique:registers',
+            'email'=> 'required|email|unique:registers,email,'.$register->id,
             'password'=> 'required|min:9',
             'phone'=> 'required|numeric|min:5',
             'picture' => 'nullable|mimes:jpg,png'
