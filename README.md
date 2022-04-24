@@ -38,7 +38,6 @@ Sistema Registro - Crud - Completo
 <br>
 -- Sistema de registro , inclusão, alterar, deletar e listar, tudo feito sem o refresh da pagina. 
 <br>
-<br>
 -- Sistema de registro foi usado axios para requisições ajax. 
 <br>
 
