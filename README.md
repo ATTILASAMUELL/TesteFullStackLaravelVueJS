@@ -69,17 +69,17 @@ https://user-images.githubusercontent.com/76443540/164912830-fca634d3-5437-41da-
 
 <br>
 <br>
------------------------- INSTRUÇÕES DE USO DO SISTEMA DE REGISTRO -------------------------
+------------------------ INSTRUÇÕES DE USO DO SISTEMA DE REGISTRO ----------------------------------------------
 <br>
 <br>
 
--------------> Baixar e Instalar o XAMPP  e criar no PhpMyAdmin : criar o DataBase:apiLaravelTeste <-----------------
+-------------> Baixar e Instalar o XAMPP  e criar no PhpMyAdmin : criar o DataBase:apiLaravelTeste <----------------
 <br>
 <br>
--------------------------------> Baixar e Instalar o Composer <-----------------------------------------------------
+-------------------------------> Baixar e Instalar o Composer <------------------------------------------------------
 <br>
 <br>
---------------------------> Baixar e Instalar o Laravel 8.* via composer <--------------------------------------------
+--------------------------> Baixar e Instalar o Laravel 8.* via composer <-------------------------------------------
 <br>
 <br>
 ------------------------------> Rodar migration do Laravel 8.* e rodar o php artisan serve<---------------------------
