@@ -79,7 +79,7 @@ https://user-images.githubusercontent.com/76443540/164912830-fca634d3-5437-41da-
 <br>
 <br>
 ----------------------------------> Baixar e Instalar o Composer <--------------------------------------------------------
-![image](https://user-images.githubusercontent.com/76443540/164978088-87c7c714-ab04-4456-8ff2-aed7ab09d23d.png)
+![image](https://user-images.githubusercontent.com/76443540/164978259-1f474a83-0edd-4d87-aca3-bfc2746ae206.png)
 
 <br>
 <br>
