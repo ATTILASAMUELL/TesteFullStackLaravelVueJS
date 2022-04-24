@@ -69,7 +69,7 @@ https://user-images.githubusercontent.com/76443540/164912830-fca634d3-5437-41da-
 
 <br>
 <br>
------------------------------ INSTRUÇÕES DE USO DO SISTEMA DE REGISTRO ------------------------------------------------
+------------------------ INSTRUÇÕES DE USO DO SISTEMA DE REGISTRO -------------------------
 <br>
 <br>
 
