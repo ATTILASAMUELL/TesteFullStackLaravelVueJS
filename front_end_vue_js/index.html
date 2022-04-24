@@ -287,20 +287,14 @@
                 novoRegistro:function(){
                     
                     
-                    this.limparCampos()
+                    
                     
                     this.dialog=true;
+                    this.controlador = false;
                     
                     this.tipoRegistro = " - Novo"
+                    this.limparCampos();
 
-                    
-            
-                    if(document.getElementById('foto') != null)
-                    {
-                        document.getElementById('foto').value= "";
-                    
-
-                    }
                     
                     
 
@@ -311,9 +305,12 @@
                 {
                     if( this.opcao == "criarNovoRegistro" )
                     {
+                        
+                        
                         this.criarNovoRegistro();
                     }else if(this.opcao == "editarRegistro")
                     {
+                        
                         this.editandoRegistro();
 
                     }
@@ -359,10 +356,12 @@
                 {
             
                     this.dialog = true;
+                    this.limparCampos();
                     this.condEdicao = true;
                    
                     
                     this.tipoRegistro = " - Edição"
+                    
                     this.registro.id = id;
                     this.registro.nome = nome;
                     this.registro.email = email;
@@ -382,11 +381,11 @@
                     }).then((result) => {                
                         if (result.isConfirmed) { 
                             let urlDel = "http://127.0.0.1:8000/api/registro/"+id;
-                            console.log(urlDel)
-                            console.log(id)
-
+                            
                             axios.delete(urlDel).then(response=>{
+                                this.limparCampos();
                                 this.mostrar();
+                                this.controlador == false;
                                
                                 
                                 
@@ -413,6 +412,7 @@
 
                     if(this.controlador == true)
                     {
+                        
                         
                         
                         let formDataEdit = new FormData();
@@ -479,9 +479,7 @@
                 {
                     
                     
-                    let file = document.getElementById('foto').files[0];
-
-                    
+                    let file = document.getElementById('foto').files[0]; 
 
                     this.registro.foto = file;
                     
@@ -502,6 +500,13 @@
                     
                 },
                 limparCampos: function(){
+                    if(document.getElementById('foto') != null)
+                    {
+                        
+                        document.getElementById('foto').value = "";
+
+                    }
+                    
                     this.registro.id = null;
                     this.registro.nome = ""
                     this.registro.email = ""
