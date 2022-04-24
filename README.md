@@ -74,6 +74,8 @@ https://user-images.githubusercontent.com/76443540/164912830-fca634d3-5437-41da-
 <br>
 
 -----------------------------------> Baixar e Instalar o XAMPP <----------------------------------------------------------
+![image](https://user-images.githubusercontent.com/76443540/164978216-ba19e2ff-ac14-45a2-87c8-544cc508e44f.png)
+
 <br>
 <br>
 ----------------------------------> Baixar e Instalar o Composer <--------------------------------------------------------
