@@ -69,26 +69,20 @@ https://user-images.githubusercontent.com/76443540/164912830-fca634d3-5437-41da-
 
 <br>
 <br>
--------------------------------- INSTRUÇÕES DE USO DO SISTEMA DE REGISTRO ----------------------------------------------------
+----------------------------- INSTRUÇÕES DE USO DO SISTEMA DE REGISTRO ------------------------------------------------
 <br>
 <br>
 
------------------------------------> Baixar e Instalar o XAMPP <----------------------------------------------------------
-![image](https://user-images.githubusercontent.com/76443540/164978216-ba19e2ff-ac14-45a2-87c8-544cc508e44f.png)
-
+-------------> Baixar e Instalar o XAMPP  e criar no PhpMyAdmin : criar o DataBase:apiLaravelTeste <-----------------
 <br>
 <br>
-----------------------------------> Baixar e Instalar o Composer <--------------------------------------------------------
-![compo](https://user-images.githubusercontent.com/76443540/164978319-cd2983f7-7e89-4d68-8220-c640bc2ad7ce.png)
-
-
-
+-------------------------------> Baixar e Instalar o Composer <-----------------------------------------------------
 <br>
 <br>
-----------------------------------------------------> Baixar e Instalar o Laravel 8.* <---------------------------------------------------------
+--------------------------> Baixar e Instalar o Laravel 8.* via composer <--------------------------------------------
 <br>
 <br>
-----------------------------------------------------> Rodar migration do Laravel 8.* <---------------------------------------------------------
+------------------------------> Rodar migration do Laravel 8.* e rodar o php artisan serve<---------------------------
 <br>
 <br>
-** A parte do VUE JS - foi usado - vuetifyjs CDN - não precisa baixar e instalar nada, somente conectado a internet.
+** A parte do VUE JS - foi usado - vuetifyjs CDN - não precisa baixar e instalar nada, somente conectado a internet e verificar se o servidor está rodando normalmente.
