@@ -6,7 +6,7 @@
 
 
 <h1>  Desafio Full Stack Laravel e Vue JS </h1>
-Candidato: ATTILA SAMUELL NUNES TABORY 
+
 <div style="display:inline_block"><br/>
   
   
